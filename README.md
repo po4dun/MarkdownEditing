@@ -1,3 +1,221 @@
+# MarkdownEditing for Stata & R
+
+This repository adds support for Stata & R with native key bindings to Markdown GFM syntax of [MarkdownEditing](https://github.com/SublimeText-Markdown/MarkdownEditing).
+
+## Installation
+
+You can install this repository either manually or via Package Control. I recommend the latter way since it allows users to install and automatically update packages from GitHub.
+
+0. Remove `MarkdownEditing` previously installed.
+1. Select `Preferences-Settings` and then add `"Markdown"` to `"ignored_packages"` list in `Preferences.sublime-settings – User` (right tab)  as following:
+```json
+    "ignored_packages":
+    [
+        "Vintage",
+        "Markdown",
+    ],
+```
+2. Press `ctrl`/`command`+`shift`+`p`, `p`, `c`, `a` and select `Package Control: Add Repository`.
+3. Copy & paste [the link to this repository](https://github.com/jh-min/MarkdownEditing) in the form.  
+Note that adding this repository will block installing original `MarkdownEditing` via Package Control.
+4. Press `ctrl`/`command`+`shift`+`p`, `p`, `c`, `i`, `Enter`.
+5. Search & install `MarkdownEditing` from the drop-down list.
+
+### issue
+
+- If default color scheme is not enabled, select `Preferences > Package Settings > Markdown Editing > Markdown GFM Settings – User` and then copy & paste the following code:
+```json
+{
+  "color_scheme": "Packages/MarkdownEditing/ayu-light-Monokai-Pro.sublime-color-scheme",
+}
+```
+
+
+## Usage
+
+If opening fence is either ` ```s `, ` ```{s} `, ` ```stata ` or ` ```{stata} `, fenced code block will highlight Stata syntax and support any key bindings working in Stata source(`.do` files).
+
+If opening fence is either ` ```r ` or ` ```{r} `, fenced code block will highlight R syntax and support any key bindings working in R source(`.R` files).
+
+Note that default Markdown GFM color scheme is set to [ayu light](https://packagecontrol.io/packages/ayu) and default syntax highlighting scheme is set to [Monokai Pro](https://packagecontrol.io/packages/Theme%20-%20Monokai%20Pro).
+
+
+## Key Bindings
+
+Below are some example key bindings that you can manually add to `Preferences > Key Bindings`. In order to apply those key bindings, you need to install [Multicommand](https://packagecontrol.io/packages/Multicommand) via package control first. For Stata users, I recommend using [Markstat](https://data.princeton.edu/stata/markdown) to integrate Stata results into Markdown document. For R users, I recommend using [SendCode](https://packagecontrol.io/packages/SendCode) and [Terminus](https://packagecontrol.io/packages/Terminus) to execute R code within Sublime Text.
+
+### for Stata
+
+#### [StataEditor](https://packagecontrol.io/packages/StataEditor) (Windows)
+
+- remapping key bindings to execute Stata code line by line pressing `ctrl`+`d` and whole code pressing `ctrl`+`alt`+`d`:
+
+```json
+[ /* the outermost square brackets are only needed if you have never defined Key Bindings before */
+  // StataEditor
+  { /* remap StataEditor to mimic SendCode */
+    "keys": ["ctrl+d"],
+    "command": "multicommand",
+    "args": {
+      "commands": [
+        {
+          "command": "stata_execute",
+          "args": {"Mode": "do", "Selection": "line"},
+        },
+        {
+          "command": "move_to",
+          "args": {"to": "hardeol"},
+        },
+        {
+          "command": "move",
+          "args": {"by": "lines", "forward": true},
+        },
+        {
+          "command": "move_to",
+          "args": {"to": "hardbol"},
+        },
+      ],
+    },
+    "context":
+    [
+      { "key": "selector", "operator": "equal", "operand": "source.stata" }
+    ],
+  },
+  { /* remap StataEditor */
+    "keys": ["ctrl+alt+d"],
+    "command": "stata_execute",
+    "args": {"Mode": "do", "Selection": "default"},
+    "context":
+    [
+      { "key": "selector", "operator": "equal", "operand": "source.stata" }
+    ],
+  },
+] /* the outermost square brackets are only needed if you have never defined Key Bindings before */
+```
+
+#### [Improved Stata Editor](https://packagecontrol.io/packages/Stata%20Improved%20Editor) (macOS)
+
+- remapping key bindings to execute Stata code line by line pressing `command`+`d` and whole code pressing `command`+`option`+`d`:
+
+```json
+[ /* the outermost square brackets are only needed if you have never defined Key Bindings before */
+  // Improved Stata Editor
+  { /* remap Improved Stata Editor to mimic SendCode */
+    "keys": ["super+d"],
+    "command": "multicommand",
+    "args": {
+      "commands": [
+        {
+          "command": "lines_to_stata",
+        },
+        {
+          "command": "move_to",
+          "args": {"to": "hardeol"},
+        },
+        {
+          "command": "move",
+          "args": {"by": "lines", "forward": true},
+        },
+        {
+          "command": "move_to",
+          "args": {"to": "hardbol"},
+        },
+      ],
+    },
+    "context":
+    [
+      { "key": "selector", "operator": "equal", "operand": "source.stata" }
+    ],
+  },
+  { /* remap Improved Stata Editor */
+    "keys": ["super+option+d"],
+    "command": "piu_sign",
+    "context":
+    [
+      { "key": "selector", "operator": "equal", "operand": "source.stata" }
+    ],
+  },
+] /* the outermost square brackets are only needed if you have never defined Key Bindings before */
+```
+
+### for R
+
+#### Windows
+
+- remapping key bindings to insert `<-` pressing `alt`+`-` and delete `<-` pressing `backspace` just once:
+
+```json
+[ /* the outermost square brackets are only needed if you have never defined Key Bindings before */
+  { /* insert R assignment operator easily */
+    "keys":["alt+-"],
+    "command": "insert",
+    "args": {"characters": "<-"},
+    "context":
+    [
+      { "key": "selector", "operator": "equal", "operand": "source.r" },
+    ],
+  },
+  { /* delete R assignment operator easily */
+    "keys": ["backspace"],
+    "command": "multicommand",
+    "args": {
+      "commands": [
+        {
+          "command": "left_delete"
+        },
+        {
+          "command": "left_delete"
+        },
+      ],
+    },
+    "context": [
+      { "key": "selector", "operator": "equal", "operand": "source.r" },
+          { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
+          { "key": "preceding_text", "operator": "regex_contains", "operand": "<-$", "match_all": true }
+    ],
+  },
+] /* the outermost square brackets are only needed if you have never defined Key Bindings before */
+```
+
+#### macOS
+
+- remapping key bindings to insert `<-` pressing `option`+`-` and delete `<-` pressing `backspace` just once:
+
+```json
+[ /* the outermost square brackets are only needed if you have never defined Key Bindings before */
+  { /* insert R assignment operator easily */
+    "keys":["option+-"],
+    "command": "insert",
+    "args": {"characters": "<-"},
+    "context":
+    [
+      { "key": "selector", "operator": "equal", "operand": "source.r" },
+    ],
+  },
+  { /* delete R assignment operator easily */
+    "keys": ["backspace"],
+    "command": "multicommand",
+    "args": {
+      "commands": [
+        {
+          "command": "left_delete"
+        },
+        {
+          "command": "left_delete"
+        },
+      ],
+    },
+    "context": [
+      { "key": "selector", "operator": "equal", "operand": "source.r" },
+          { "key": "selection_empty", "operator": "equal", "operand": true, "match_all": true },
+          { "key": "preceding_text", "operator": "regex_contains", "operand": "<-$", "match_all": true }
+    ],
+  },
+] /* the outermost square brackets are only needed if you have never defined Key Bindings before */
+```
+
+---
+
 # MarkdownEditing
 
 Markdown plugin for Sublime Text. Provides a decent Markdown color scheme (light and dark) with more __robust__ syntax highlighting and useful Markdown editing features for Sublime Text. 3 flavors are supported: Standard Markdown, __GitHub flavored Markdown__, MultiMarkdown.
@@ -11,24 +229,24 @@ Markdown plugin for Sublime Text. Provides a decent Markdown color scheme (light
 <!-- MarkdownTOC autolink="true" bracket="round" markdown_preview="markdown" -->
 
 - [Installation](#installation)
-    - [Package Control](#package-control)
-    - [Manual Installation](#manual-installation)
+  - [Package Control](#package-control)
+  - [Manual Installation](#manual-installation)
 - [Features](#features)
-    - [Markdown features](#markdown-features)
-    - [Wiki features](#wiki-features)
+  - [Markdown features](#markdown-features)
+  - [Wiki features](#wiki-features)
 - [Key Bindings](#key-bindings)
 - [GFM Specific Features](#gfm-specific-features)
 - [Commands for Command Palette](#commands-for-command-palette)
-    - [General Commands](#general-commands)
-    - [Links, References and Footnotes](#links-references-and-footnotes)
-    - [Folding and Navigation](#folding-and-navigation)
+  - [General Commands](#general-commands)
+  - [Links, References and Footnotes](#links-references-and-footnotes)
+  - [Folding and Navigation](#folding-and-navigation)
 - [Configuration](#configuration)
-    - [Additional color themes:](#additional-color-themes)
+  - [Additional color themes:](#additional-color-themes)
 - [Tips](#tips)
 - [Enable WYSIWYG](#enable-wysiwyg)
 - [Troubleshooting](#troubleshooting)
-    - [Error loading syntax file...](#error-loading-syntax-file)
-    - [Roll back to an older version](#roll-back-to-an-older-version)
+  - [Error loading syntax file...](#error-loading-syntax-file)
+  - [Roll back to an older version](#roll-back-to-an-older-version)
 - [Related Plugins](#related-plugins)
 - [Known Bugs](#known-bugs)
 - [Contributing](#contributing)
@@ -38,6 +256,7 @@ Markdown plugin for Sublime Text. Provides a decent Markdown color scheme (light
 
 <!-- /MarkdownTOC -->
 
+<a id="installation"></a>
 ## Installation
 
 You can install MarkdownEditing either from Package Control (recommended) or manually. Package Control automatically download the package and keeps it up-to-date. Manual installation is required if you need to tweak the code.
@@ -48,6 +267,7 @@ If you are using Sublime Text 2, you have to disable the native package _manuall
 
 > Getting "Error loading syntax file..."? See [this](#error-loading-syntax-file).
 
+<a id="package-control"></a>
 ### Package Control
 
 The preferred method of installation is via [Sublime Package Control][PackageControl].
@@ -58,6 +278,7 @@ The preferred method of installation is via [Sublime Package Control][PackageCon
 4. Type `MarkdownEditing` and hit Return. The package will be downloaded to the appropriate directory.
 5. Restart Sublime Text to complete installation. Open a Markdown file and this custom theme. The features listed below should now be available.
 
+<a id="manual-installation"></a>
 ### Manual Installation
 
 1. In Sublime Text, open the menu "Preferences" -> "Browse Packages...". This is the Sublime Text Packages directory.
@@ -65,10 +286,12 @@ The preferred method of installation is via [Sublime Package Control][PackageCon
 3. The folder structure should look like `.../Sublime Text 3/Packages/MarkdownEditing/[files]`.
 4. Restart Sublime Text to complete installation. Open a Markdown file. The features listed below should now be available.
 
+<a id="features"></a>
 ## Features
 
 You can access most features through Command Palette. You can launch it from `Tools -> Command Palette...`. MarkdownEditing commands start with `MarkdownEditing:`. And they are only visible when a markdown file is open and active.
 
+<a id="markdown-features"></a>
 ### Markdown features
 
 * __Pairing__
@@ -102,6 +325,7 @@ You can access most features through Command Palette. You can launch it from `To
     - Setext-style headers can be completed with `Tab`. That is, typing `Tab` on a line containing only `=` or `-` characters will add or remove enough characters to it to match the length of the line above.
     - New documents will be named automatically based on the first header.
 
+<a id="wiki-features"></a>
 ### Wiki features
 
 Wiki links are defined by surrounding a (wiki) word with double square brackets, for example:
@@ -125,6 +349,7 @@ Journal wiki pages are also supported.  A journal page is just a wiki page with 
 
 Lastly the command to open the *home* page is provided, where the home page is just a wiki page named `HomePage`.
 
+<a id="key-bindings"></a>
 ## Key Bindings
 
 | OS X | Windows/Linux | Description |
@@ -145,6 +370,7 @@ Lastly the command to open the *home* page is provided, where the home page is j
 | <kbd>⌘</kbd><kbd>⌥</kbd><kbd>B</kbd> | <kbd>Ctrl</kbd><kbd>Shift</kbd><kbd>B</kbd> | List back links
 
 
+<a id="gfm-specific-features"></a>
 ## GFM Specific Features
 
 [GFM][] means GitHub Flavored Markdown is the dialect of Markdown that is currently supported for user content on GitHub.com and GitHub Enterprise. It has [some unique features][GFMFeatures]:
@@ -165,10 +391,12 @@ Strikethrough is supported:
 
 ![strikethrough][GFM-Strikethrough]
 
+<a id="commands-for-command-palette"></a>
 ## Commands for Command Palette
 
 You can launch Command Palette from `Tools -> Command Palette...`. MarkdownEditing commands start with `MarkdownEditing:`. And they are only visible when a markdown file is open and active.
 
+<a id="general-commands"></a>
 ### General Commands
 
 * __Fix Underlined Headers__
@@ -184,6 +412,7 @@ You can launch Command Palette from `Tools -> Command Palette...`. MarkdownEditi
 * __Switch List Bullet Type__
     Switches the highlighted list between numbered and bulleted style.
 
+<a id="links-references-and-footnotes"></a>
 ### Links, References and Footnotes
 
 * __Add Missing Link Labels__
@@ -209,6 +438,7 @@ You can launch Command Palette from `Tools -> Command Palette...`. MarkdownEditi
 * __Organize References__
     Sorts and gives a report on current link references usage.
 
+<a id="folding-and-navigation"></a>
 ### Folding and Navigation
 
 Remember you can <kbd>Ctrl</kbd> <kbd>R</kbd> (in document) and <kbd>Ctrl</kbd> <kbd>Shift</kbd> <kbd>R</kbd> (project-wise) for quick navigation for all headers.
@@ -222,6 +452,7 @@ Remember you can <kbd>Ctrl</kbd> <kbd>R</kbd> (in document) and <kbd>Ctrl</kbd> 
 * __Find Next/Previous Heading__
     You have option to find just same or higher level or any level
 
+<a id="configuration"></a>
 ## Configuration
 
 The plugin contains 3 different Markdown flavors: Standard Markdown, GitHub flavored Markdown, MultiMarkdown. Default is GitHub flavored Markdown. If you want to set another one as default, open a Markdown file and select your flavor from the menu: `View > Syntax > Open all with current extension as`. You're done.
@@ -245,6 +476,7 @@ In order to activate the dark or the yellow theme, put one of these lines to you
 
 If you want to go with your already existing theme, you can reenable it with the same method as above. Keep in mind that, that theme may not cover all the parts of the Markdown syntax that this plugin defines.
 
+<a id="additional-color-themes"></a>
 ### Additional color themes:
 
 - [Blackboard theme][linkBlackboardTheme] by [@mdesantis][mdesantis]
@@ -256,10 +488,12 @@ By default, when you install the plugin, files with these extensions will be ass
 2. Select "Open all with current extension as"
 3. Choose your preferred syntax for that extension
 
+<a id="tips"></a>
 ## Tips
 
 We are maintaining a [tips section][tips] in our [Wiki][]. Jump there to learn from others or share your experiences with others.
 
+<a id="enable-wysiwyg"></a>
 ## Enable WYSIWYG
 
 Sublime can be configured into a WYSIWYG (what you see is what you get) editor with two other plugins:
@@ -275,8 +509,10 @@ Install them if you haven't. Then
 
 Now open palette and choose "Preview in Browser" and you will get a WYSIWYG editor.
 
+<a id="troubleshooting"></a>
 ## Troubleshooting
 
+<a id="error-loading-syntax-file"></a>
 ### Error loading syntax file...
 
 __Are you getting this error after installation: _**Error loading syntax file** "Packages/Markdown/Markdown.tmLanguage": Unable to open Packages/Markdown/Markdown.tmLanguage_?__
@@ -285,10 +521,12 @@ __Are you getting this error after installation: _**Error loading syntax file** 
 
 _Note_: Sublime text has a native tiny package for Markdown. However, when MarkdownEditing is enabled, native package causes some conflicts. For this reason, MarkdownEditing will automatically disable it. Since it doesn't bring anything new over MarkdownEditing, this is not a loss. But remember, when you disable MarkdownEditing, you have to reenable the native one manually (if you want).
 
+<a id="roll-back-to-an-older-version"></a>
 ### Roll back to an older version
 
 When you notice any undesired behavior introduced by the latest update, your feedback is always welcome in our [issue page](https://github.com/SublimeText-Markdown/MarkdownEditing/issues). However before it's fixed, you can rollback to [an earlier version](https://github.com/SublimeText-Markdown/MarkdownEditing/releases). Find the desired version and download the zip file, then follow [manual installation guide](#manual-installation)
 
+<a id="related-plugins"></a>
 ## Related Plugins
 
 * [Knockdown][]
@@ -300,16 +538,19 @@ When you notice any undesired behavior introduced by the latest update, your fee
     - Sublime Text 3 plugin for generating a Table of Contents (TOC) in a Markdown document.
 * See https://packagecontrol.io/search/markdown for more.
 
+<a id="known-bugs"></a>
 ## Known Bugs
 
 * Setext-style headers (`===` and `---`) do not show up in the symbol list. This is due to a Sublime Text limitation (see [#158][]). However, we are able to put a placeholder to indicate the existence of the header. We encourage you to use Atx-style headers (`#`).
 
 * Installing for the first time while having markdown files opened may cause MarkdownEditing to behave unexpectedly on those files. Close and reopen those files to fix it.
 
+<a id="contributing"></a>
 ## Contributing
 
 See `CONTRIBUTING.md` file.
 
+<a id="credits"></a>
 ## Credits
 
 MarkdownEditing was originally created by [Brett Terpstra][brettterpstra] and has become a community project with the goal of consolidating the best features from the varied collection of Markdown packages for Sublime Text. Current development is headed up by [Ali Ayas][maliayas] and [Felix Hao][felixhao28].
@@ -322,6 +563,7 @@ This plugin contains portions of code from [Knockdown][].
 
 Footnote commands were submitted by [J. Nicholas Geist][] and originated at [geekabouttown][geekabouttown].
 
+<a id="donation"></a>
 ## Donation
 
 You can support [contributors](https://github.com/SublimeText-Markdown/MarkdownEditing/graphs/contributors) of this project individually. Every contributor is welcomed to add his/her line below with any content. Ordering shall be alphabetically by GitHub username.
@@ -329,6 +571,7 @@ You can support [contributors](https://github.com/SublimeText-Markdown/MarkdownE
 * [@felixhao28][felixhao28]: <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=9QV2RFV2J8UZS"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" alt="[paypal]" /></a>
 * [@maliayas][maliayas]: <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=W2NXRPD43YSCU&amp;lc=TR&amp;item_name=open-source&amp;item_number=markdown-editing&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donate_LG%2egif%3aNonHosted"><img src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" alt="[paypal]" /></a> ![donation received](http://maliayas.com/business/donation/badge.php?project=markdown_editing)
 
+<a id="license"></a>
 ## License
 
 MarkdownEditing is released under the [MIT License][opensource].
