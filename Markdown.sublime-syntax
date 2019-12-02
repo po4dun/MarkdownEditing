@@ -420,6 +420,8 @@ contexts:
       embed_scope: markup.raw.block.markdown markup.raw.block.fenced.markdown
       escape: ^(\1)\n
   fenced-code-blocks:
+    - include: fenced-stata
+    - include: fenced-r
     - include: fenced-html
     - include: fenced-xml
     - include: fenced-diff
@@ -456,6 +458,16 @@ contexts:
     - include: fenced-haskell
     - include: fenced-rust
     - include: fenced-undefined
+  fenced-stata:
+    - match: '^(\s*[`~]{3,})\s*(s|stata|{s}|{s(\s|\,).*}|{stata}|{stata(\s|\,).*})\s*$'
+      embed: scope:source.stata
+      embed_scope: markup.raw.block.markdown markup.raw.block.fenced.markdown
+      escape: ^(\1)\n
+  fenced-r:
+    - match: '^(\s*[`~]{3,})\s*(r|{r}|{r(\s|\,).*})\s*$' 
+      embed: scope:source.r
+      embed_scope: markup.raw.block.markdown markup.raw.block.fenced.markdown
+      escape: ^(\1)\n
   fenced-coffee:
     - match: '^(\s*[`~]{3,})\s*(coffee|cjsx)\s*$'
       embed: scope:source.coffee

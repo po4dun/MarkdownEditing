@@ -1,4 +1,5 @@
 *.pyc
 *.cache
+*.chback
 MarkdownEditing.taskpaper
 /_warehouse

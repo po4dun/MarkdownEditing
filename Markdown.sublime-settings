@@ -3,10 +3,13 @@
 	[
 		"md",
 		"mdown",
-		"txt"
+		"txt",
+		"stmd",
+		"rmd"
 	],
 
-	"color_scheme": "Packages/MarkdownEditing/MarkdownEditor.tmTheme",
+	"color_scheme": "Packages/MarkdownEditing/ayu-light-Monokai-Pro.sublime-color-scheme",
+	// "color_scheme": "Packages/MarkdownEditing/MarkdownEditor.tmTheme",
 	// "color_scheme": "Packages/MarkdownEditing/MarkdownEditor-Dark.tmTheme",
 	// "color_scheme": "Packages/MarkdownEditing/MarkdownEditor-Yellow.tmTheme",
 
