@@ -552,7 +552,7 @@
 		{
 			"name": "CODE: JSON String",
 			"scope": "markup.raw.block.markdown meta.structure.dictionary.json string.quoted.double.json",
-			"foreground": "#c1c0c0",
+			"foreground": "#939293",
 		},
 		{
 			"name": "CODE: diff.header",
