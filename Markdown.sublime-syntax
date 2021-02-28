@@ -599,7 +599,7 @@ contexts:
       embed_scope: markup.raw.block.markdown markup.raw.block.fenced.markdown
       escape: ^(\1)\n
   fenced-stata:
-    - match: '^(\s*[`~]{3,})\s*(s|stata|{s}|{s(\s|\,).*}|{stata}|{stata(\s|\,).*})\s*$'
+    - match: '^(\s*[`~]{3,})\s*(s|s\/|stata|{s}|{s(\s|\,).*}|{stata}|{stata(\s|\,).*})\s*$'
       embed: scope:source.stata
       embed_scope: markup.raw.block.markdown markup.raw.block.fenced.markdown
       escape: ^(\1)\n
